@@ -13,6 +13,13 @@ export enum Gender {
     Female = "FEMALE"
 }
 
+export enum Role {
+    SuperAdmin = "SUPER_ADMIN",
+    Admin = "ADMIN",
+    Driver = "DRIVER",
+    User = "USER"
+}
+
 
 export interface IAuthProvider {
     provider: 'google' | 'credentials',
@@ -28,6 +35,7 @@ export interface IUser {
     password?: string,
     phone?: string,
     gender?: string,
+    role?: Role,
     isVerified?: boolean,
     isActive?: IsActive,
     isDeleted?: boolean,
