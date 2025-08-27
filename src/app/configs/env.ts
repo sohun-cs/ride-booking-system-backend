@@ -9,11 +9,13 @@ interface IEnvTypes {
     SUPER_ADMIN_EMAIL: string,
     SUPER_ADMIN_PASS: string,
     BCRYPT_SALT_ROUND: string,
+    JWT_SECRET: string,
+    JWT_EXPIRES: string
 }
 
 const envConfigs = (): IEnvTypes => {
 
-    const envVariablesArr = ["DB_URL", "PORT", "NODE_ENV", "SUPER_ADMIN_EMAIL", "SUPER_ADMIN_PASS", "BCRYPT_SALT_ROUND"];
+    const envVariablesArr = ["DB_URL", "PORT", "NODE_ENV", "SUPER_ADMIN_EMAIL", "SUPER_ADMIN_PASS", "BCRYPT_SALT_ROUND", "JWT_SECRET", "JWT_EXPIRES"];
 
     envVariablesArr.forEach(key => {
         if (!process.env[key]) {
@@ -28,6 +30,8 @@ const envConfigs = (): IEnvTypes => {
         SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
         SUPER_ADMIN_PASS: process.env.SUPER_ADMIN_PASS as string,
         BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
+        JWT_SECRET: process.env.JWT_SECRET as string,
+        JWT_EXPIRES: process.env.JWT_EXPIRES as string
     }
 
 }
