@@ -12,7 +12,7 @@ const credentialLogin = async (payload: Partial<IUser>) => {
 
     try {
 
-        const { email, password, ...rest } = payload;
+        const { email, password } = payload;
 
         const isUserExists = await User.findOne({ email });
 
@@ -27,8 +27,9 @@ const credentialLogin = async (payload: Partial<IUser>) => {
         }
 
         const jwtPayload = {
+            userId: isUserExists._id,
             email: isUserExists.email,
-            ...rest
+            role: isUserExists.role
         }
 
         const accessToken = generateToken(jwtPayload, envVar.JWT_SECRET, envVar.JWT_EXPIRES);
@@ -40,7 +41,6 @@ const credentialLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_GATEWAY, `You cannot login right now. ${error}`)
 
     }
-
 };
 
 

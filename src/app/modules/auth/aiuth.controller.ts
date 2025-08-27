@@ -11,13 +11,13 @@ const credentialLogin = CatchAsync(async (req: Request, res: Response, next: Nex
 
     const payload = req.body;
 
-    const userLogin = await AuthServices.credentialLogin(payload)
+    const loginInfo = await AuthServices.credentialLogin(payload)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "User login successfully",
-        data: userLogin
+        data: loginInfo
     })
 
 })

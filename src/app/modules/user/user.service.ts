@@ -1,9 +1,10 @@
 import AppError from "../../errors/AppError";
-import { IAuthProvider, IUser } from "./user.interface";
+import { IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import httpStatus from 'http-status-codes';
 import bcrypt from 'bcryptjs';
 import { envVar } from "../../configs/env";
+import { JwtPayload } from "jsonwebtoken";
 
 
 const createUser = async (payload: Partial<IUser>) => {
@@ -52,8 +53,47 @@ const getAllUser = async () => {
 
 
 
+const updateUser = async (userId: string, payload: Partial<IUser>, accessToken: JwtPayload) => {
+
+    const isUserExists = await User.findById(userId);
+
+    if (!isUserExists) {
+        throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    };
+
+
+    if (payload.email) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Email cannot be changed")
+    }
+
+
+    if (payload.role) {
+        if (accessToken.role === Role.User || accessToken.role === Role.Driver) {
+            throw new AppError(httpStatus.BAD_REQUEST, "You're not permitted")
+        }
+
+        if (payload.role === Role.SuperAdmin && accessToken.role === Role.Admin) {
+            throw new AppError(httpStatus.BAD_REQUEST, "You're not permitted")
+        }
+    };
+
+    if (payload.isActive || payload.isDeleted || payload.isVerified) {
+        if (accessToken.role === Role.User || accessToken.role === Role.Driver) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Email cannot be changed")
+        }
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, payload, { new: true, runValidators: true });
+
+    return updatedUser;
+
+}
+
+
+
 
 export const UserServices = {
     createUser,
-    getAllUser
+    getAllUser,
+    updateUser
 }
